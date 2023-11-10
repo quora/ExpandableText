@@ -56,6 +56,7 @@ public struct ExpandableText: View {
     
     public var body: some View {
         content
+            .animation(expandAnimation)
             .lineLimit(isExpanded ? nil : lineLimit)
             .applyingTruncationMask(size: moreTextSize, enabled: shouldShowMoreButton)
             .readSize { size in
