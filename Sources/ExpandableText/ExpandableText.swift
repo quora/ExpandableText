@@ -27,12 +27,12 @@ ExpandableText("Lorem ipsum dolor sit amet, consectetur adipiscing elit...")
 */
 public struct ExpandableText: View {
 
-    @State private var isExpanded: Bool = false
     @State private var isTruncated: Bool = false
 
     @State private var intrinsicSize: CGSize = .zero
     @State private var truncatedSize: CGSize = .zero
     @State private var moreTextSize: CGSize = .zero
+    @State internal var isExpanded: Bool
     
     private let text: String
     internal var font: Font = .body
@@ -50,8 +50,9 @@ public struct ExpandableText: View {
      - Parameter text: The initial text string to display in the `ExpandableText` view.
      - Returns: A new `ExpandableText` instance with the specified text string and trimming applied.
      */
-    public init(_ text: String) {
+    public init(_ text: String, expanded: Bool? = nil) {
         self.text = text.trimmingCharacters(in: .whitespacesAndNewlines)
+        self.isExpanded = expanded ?? false
     }
     
     public var body: some View {
