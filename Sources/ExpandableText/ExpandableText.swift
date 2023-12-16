@@ -32,8 +32,8 @@ public struct ExpandableText: View {
     @State private var intrinsicSize: CGSize = .zero
     @State private var truncatedSize: CGSize = .zero
     @State private var moreTextSize: CGSize = .zero
-    @State internal var isExpanded: Bool
-    
+    @Binding internal var isExpanded: Bool
+
     private let text: String
     internal var font: Font = .body
     internal var color: Color = .primary
@@ -50,9 +50,9 @@ public struct ExpandableText: View {
      - Parameter text: The initial text string to display in the `ExpandableText` view.
      - Returns: A new `ExpandableText` instance with the specified text string and trimming applied.
      */
-    public init(_ text: String, expanded: Bool? = nil) {
+    public init(_ text: String, expanded: Binding<Bool>) {
         self.text = text.trimmingCharacters(in: .whitespacesAndNewlines)
-        self.isExpanded = expanded ?? false
+        _isExpanded = expanded
     }
     
     public var body: some View {
