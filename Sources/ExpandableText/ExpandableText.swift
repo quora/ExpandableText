@@ -46,9 +46,9 @@ public struct ExpandableText: View {
     internal var trimMultipleNewlinesWhenTruncated: Bool = true
     
     /**
-     Initializes a new `ExpandableText` instance with the specified text string, trimmed of any leading or trailing whitespace and newline characters.
-     - Parameter text: The initial text string to display in the `ExpandableText` view.
-     - Returns: A new `ExpandableText` instance with the specified text string and trimming applied.
+     Initializes a new `ExpandableText` with the provided text string, trimming any leading or trailing whitespace and newline characters.
+     - Parameter text: The text to display in the `ExpandableText` view.
+     - Parameter expanded: A binding that indicates whether the text is currently expanded (`true`) or collapsed (`false`).
      */
     public init(_ text: String, expanded: Binding<Bool>) {
         self.text = text.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -62,7 +62,7 @@ public struct ExpandableText: View {
             .applyingTruncationMask(size: moreTextSize, enabled: shouldShowMoreButton)
             .readSize { size in
                 truncatedSize = size
-                isTruncated = truncatedSize != intrinsicSize
+                refreshTruncationStatus()
             }
             .background(
                 content
@@ -71,7 +71,7 @@ public struct ExpandableText: View {
                     .hidden()
                     .readSize { size in
                         intrinsicSize = size
-                        isTruncated = truncatedSize != intrinsicSize
+                        refreshTruncationStatus()
                     }
             )
             .background(
@@ -110,6 +110,18 @@ public struct ExpandableText: View {
         .foregroundColor(color)
         .frame(maxWidth: .infinity, alignment: .leading)
     }
+
+
+    /// Updates `isTruncated` and, if the text isn't truncated, ensures it is marked as expanded.
+    private func refreshTruncationStatus() {
+        isTruncated = truncatedSize != intrinsicSize
+        if !isTruncated {
+            // When the text fits without truncation, the collapsed and expanded states
+            // are effectively identical, so we mark it as expanded
+            isExpanded = true
+        }
+    }
+
 
     private var shouldShowMoreButton: Bool {
         !isExpanded && isTruncated
